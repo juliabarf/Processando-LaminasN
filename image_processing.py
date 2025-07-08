@@ -25,6 +25,7 @@ def calculate_area_porosity(image):
 
     # Aplica limiarização de Otsu no canal Cb
     _, BW_otsu = cv2.threshold(cb_channel, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+    #calcular a a média dos poros na imagem
 
     # Inverte a imagem binária
     inverted_BW = cv2.bitwise_not(BW_otsu)
