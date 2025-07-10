@@ -36,4 +36,4 @@ def calcular_media_poros(image_path, mm_por_pixel):
 # Exemplo de uso:
 #calcular dpi para achar o numero exato de pixels e mm
 # Se 1 mm = 100 pixels => 1 pixel = 0.01 mm => mm_por_pixel = 0.01
-calcular_media_poros("imagem.jpg", mm_por_pixel=0.0005)
+calcular_media_poros("imagem2.png", mm_por_pixel=0.000332)
