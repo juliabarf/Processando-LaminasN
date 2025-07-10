@@ -13,7 +13,7 @@ def calculate_porosity(image):
     porosity = (white_area / total_area) * 100
     return porosity, inverted_BW
 
-def calculate_area_porosity(image):
+def calculate_average_pore_size(image):
     # Cada pixel representa 0.5 µm²
     area_por_pixel_um2 = 0.5
 
@@ -25,20 +25,23 @@ def calculate_area_porosity(image):
 
     # Aplica limiarização de Otsu no canal Cb
     _, BW_otsu = cv2.threshold(cb_channel, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-    #calcular a a média dos poros na imagem
 
-    # Inverte a imagem binária
+    # Inverte a imagem binária (poros ficam brancos)
     inverted_BW = cv2.bitwise_not(BW_otsu)
 
-    # Calcula a área total e a área branca (poros)
-    total_area = BW_otsu.size
-    white_area = np.sum(inverted_BW == 255)
+    # Encontra os contornos dos poros (áreas brancas)
+    contours, _ = cv2.findContours(inverted_BW, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-    # Calcula a porosidade da área em mm² (com conversão de µm² para mm²)
-    area_porosity = (white_area * area_por_pixel_um2) / 1e6
+    # Calcula a área de cada poro em µm²
+    pore_areas_um2 = [cv2.contourArea(cnt) * area_por_pixel_um2 for cnt in contours if cv2.contourArea(cnt) > 0]
 
-    return area_porosity, inverted_BW
+    # Calcula o tamanho médio em µm² e converte para mm²
+    if pore_areas_um2:
+        average_pore_size_mm2 = (sum(pore_areas_um2) / len(pore_areas_um2)) / 1e6
+    else:
+        average_pore_size_mm2 = 0
 
+    return average_pore_size_mm2, inverted_BW
 
 def crop_and_calculate_porosity(input_folder_path, output_folder_path, top_border, bottom_border, left_border, right_border, progress_bar):
     if not os.path.exists(output_folder_path):
@@ -79,7 +82,7 @@ def crop_and_calculate_porosity(input_folder_path, output_folder_path, top_borde
         cv2.imwrite(output_image_path, inverted_BW)
 
         # Calcular a área da porosidade
-        porosity_area, inverted_BWs = calculate_area_porosity(cropped_image)
+        porosity_area, inverted_BWs = calculate_average_pore_size(cropped_image)
         output_file_name = os.path.splitext(new_file_name)[0] + '_otsu.png'
         output_image_path = os.path.join(output_folder_path, output_file_name)
         cv2.imwrite(output_image_path, inverted_BWs)
