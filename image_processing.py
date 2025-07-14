@@ -87,7 +87,7 @@ def crop_and_calculate_porosity(input_folder_path, output_folder_path, top_borde
         output_image_path = os.path.join(output_folder_path, output_file_name)
         cv2.imwrite(output_image_path, inverted_BWs)
 
-        results.append({'Imagem': new_file_name, 'Porosidade (%)': porosity, 'Área Porosidade (mm²)': porosity_area})
+        results.append({'Imagem': new_file_name, 'Porosidade (%)': porosity, 'Média dos poros (mm²)': porosity_area})
 
         # Atualizar a barra de progresso
         progress_bar["value"] = (idx + 1) / total_files * 100
