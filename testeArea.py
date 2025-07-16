@@ -3,7 +3,7 @@ import numpy as np
 import csv
 
 # Configurações da imagem
-image_path = "imagem35.jpg"  # Substitua com o caminho correto
+image_path = "imagem87.jpg"  # Substitua com o caminho correto
 image_width_mm = 26
 image_height_mm = 18
 image_width_px = 15191
