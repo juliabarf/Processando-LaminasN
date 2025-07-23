@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 import csv
 
-# Configurações da imagem
+#calcular os pixels em mm -- mm/pix
 image_path = "imagem87.jpg"  # Substitua com o caminho correto
 image_width_mm = 26
 image_height_mm = 18
@@ -10,26 +10,26 @@ image_width_px = 15191
 image_height_px = 10692
 pixel_area_mm2 = (image_width_mm * image_height_mm) / (image_width_px * image_height_px)
 
-# Filtro de área mínima (em mm²)
+#filtro em área minima
 area_minima_mm2 = 0.005
 
-# Limiares para colorir os poros por tamanho
+#classificação dos tamanhos
 LIMIAR_PEQUENO = 0.02
 LIMIAR_MEDIO = 0.1
 
-# Carregar e processar imagem
+#carrega e processa imagem
 img = cv2.imread(image_path)
 hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 lower_blue = np.array([90, 50, 50])
 upper_blue = np.array([130, 255, 255])
 mask = cv2.inRange(hsv, lower_blue, upper_blue)
 
-# Gerar imagem preto e branco (poros em branco)
+#gera imagem preto e branco - os poros estão em branco
 bw_image = cv2.bitwise_and(img, img, mask=mask)
 bw_gray = cv2.cvtColor(bw_image, cv2.COLOR_BGR2GRAY)
 _, bw_binary = cv2.threshold(bw_gray, 1, 255, cv2.THRESH_BINARY)
 
-# Encontrar contornos
+#encontra contornos
 contours, _ = cv2.findContours(bw_binary, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
 # Criar imagem de saída em BGR com fundo preto e poros brancos
@@ -52,14 +52,14 @@ for cnt in contours:
 
         # Cor por tamanho
         if area_mm2 < LIMIAR_PEQUENO:
-            color = (255, 0, 0)  # azul (pequeno)
+            color = (255, 0, 0)  #azul
         elif area_mm2 < LIMIAR_MEDIO:
-            color = (0, 255, 255)  # amarelo (médio)
+            color = (0, 255, 255)  #amarelo
         else:
-            color = (0, 0, 255)  # vermelho (grande)
+            color = (0, 0, 255)  #vermelho
 
 
-        cv2.circle(output_base, center, radius, color, 4)  # espessura aumentada para 4
+        cv2.circle(output_base, center, radius, color, 15)  # espessura aumentada para 4
 
         # Preencher máscara de contagem
         cv2.circle(mask_circles, center, radius, 255, -1)
@@ -73,7 +73,7 @@ pores_within_circles = cv2.bitwise_and(bw_binary, mask_circles)
 white_pixels = cv2.countNonZero(pores_within_circles)
 total_real_pore_area_mm2 = white_pixels * pixel_area_mm2
 
-# Estatísticas
+#validação dos poros: precisa ser maior que 0 para ser valido para o calculo
 valid_pores = len(circle_areas_mm2)
 mean_real_area = total_real_pore_area_mm2 / valid_pores if valid_pores > 0 else 0
 mean_circle_area = np.mean(circle_areas_mm2) if valid_pores > 0 else 0

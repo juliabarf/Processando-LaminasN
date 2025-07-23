@@ -13,7 +13,7 @@ def calculate_porosity(image):
     porosity = (white_area / total_area) * 100
     return porosity, inverted_BW
 
-def calculate_average_pore_size(image):
+def calculate_media(image):
     # Cada pixel representa 0.5 µm²
     area_por_pixel_um2 = 0.5
 
