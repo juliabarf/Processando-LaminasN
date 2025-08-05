@@ -39,6 +39,9 @@ output_base[bw_binary == 255] = (255, 255, 255)  # poros brancos
 # Máscara para contagem real
 mask_circles = np.zeros_like(bw_binary)
 circle_areas_mm2 = []
+area_azul = []
+area_amarelo = []
+area_vermelho = []
 
 # Processar poros detectados
 for cnt in contours:
@@ -53,11 +56,13 @@ for cnt in contours:
         # Cor por tamanho
         if area_mm2 < LIMIAR_PEQUENO:
             color = (255, 0, 0)  #azul
+            area_azul.append(area_mm2)
         elif area_mm2 < LIMIAR_MEDIO:
             color = (0, 255, 255)  #amarelo
+            area_amarelo.append(area_mm2)
         else:
             color = (0, 0, 255)  #vermelho
-
+            area_vermelho.append(area_mm2)
 
         cv2.circle(output_base, center, radius, color, 15)  # espessura aumentada para 4
 
@@ -81,10 +86,18 @@ mean_circle_area = np.mean(circle_areas_mm2) if valid_pores > 0 else 0
 # --- SALVAR CSV ---
 csv_path = "tamanhos_poros.csv"
 with open(csv_path, mode="w", newline="") as file:
-    writer = csv.writer(file)
-    writer.writerow(["Poro", "Área do Círculo (mm²)"])
-    for i, area in enumerate(circle_areas_mm2, 1):
-        writer.writerow([i, area])
+    writer = csv.writer(file, delimiter=';')
+    writer.writerow(['Poro', 'Poro pequeno', 'Poro médio', 'Poro grande'])
+
+    # Encontra o maior tamanho entre as listas para evitar IndexError
+    max_len = max(len(area_azul), len(area_amarelo), len(area_vermelho))
+
+    # Preenche as linhas com os valores, usando "" quando não houver valor na posição
+    for i in range(max_len):
+        azul = area_azul[i] if i < len(area_azul) else ""
+        amarelo = area_amarelo[i] if i < len(area_amarelo) else ""
+        vermelho = area_vermelho[i] if i < len(area_vermelho) else ""
+        writer.writerow([i + 1, azul, amarelo, vermelho])
     writer.writerow([])
     writer.writerow(["Resumo"])
     writer.writerow(["Total de Poros (filtrados)", valid_pores])
@@ -98,3 +111,7 @@ cv2.imwrite(output_image_path, output_base)
 
 print(f"CSV salvo como: {csv_path}")
 print(f"Imagem com poros classificados salva como: {output_image_path}")
+print(area_azul)
+print(area_amarelo)
+print(area_vermelho)
+
