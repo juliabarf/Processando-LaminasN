@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import os
 import pandas as pd
+from testeArea import calculate_media
 
 def calculate_porosity(image):
     ycbcr = cv2.cvtColor(image, cv2.COLOR_BGR2YCrCb)
@@ -82,7 +83,7 @@ def crop_and_calculate_porosity(input_folder_path, output_folder_path, top_borde
         cv2.imwrite(output_image_path, inverted_BW)
 
         # Calcular a área da porosidade
-        porosity_area, inverted_BWs = calculate_average_pore_size(cropped_image)
+        porosity_area, inverted_BWs = calculate_media(cropped_image)
         output_file_name = os.path.splitext(new_file_name)[0] + '_otsu.png'
         output_image_path = os.path.join(output_folder_path, output_file_name)
         cv2.imwrite(output_image_path, inverted_BWs)

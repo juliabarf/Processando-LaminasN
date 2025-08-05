@@ -17,6 +17,7 @@ def process_images():
 
     top, bottom = int(top_entry.get()), int(bottom_entry.get())
     left, right = int(left_entry.get()), int(right_entry.get())
+
     # Reseta a barra de progresso
     progress_bar["value"] = 0
     df_porosity = crop_and_calculate_porosity(input_folder, output_folder, top, bottom, left, right,progress_bar)
