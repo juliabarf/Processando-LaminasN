@@ -116,4 +116,3 @@ def calculate_media(image):
     print(area_azul)
     print(area_amarelo)
     print(area_vermelho)
-

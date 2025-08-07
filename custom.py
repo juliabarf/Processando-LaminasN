@@ -69,6 +69,7 @@ def crop_and_calculate_porosity(input_folder_path, output_folder_path, top_borde
 
     df = pd.DataFrame(results)
     return df
+
 # Função para abrir o arquivo Excel com os resultados
 def open_excel_file():
     excel_file_path = os.path.join(output_folder_entry.get(), 'porosidade_resultados.xlsx')
