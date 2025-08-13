@@ -1,1 +1,1 @@
-Software para automatizacao de análise de porosdidade em rochas
+Software para automatizacao de análise de poros em rochas
