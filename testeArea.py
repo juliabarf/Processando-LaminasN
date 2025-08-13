@@ -104,7 +104,6 @@ def calculate_media(image):
         writer.writerow(["Resumo"])
         writer.writerow(["Total de Poros (filtrados)", valid_pores])
         writer.writerow(["Área média real (pixels brancos)", mean_real_area])
-        writer.writerow(["Área média dos círculos", mean_circle_area])
         writer.writerow(["Área mínima considerada (mm²)", area_minima_mm2])
 
     # --- SALVAR IMAGEM ---

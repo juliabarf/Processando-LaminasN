@@ -10,8 +10,11 @@ grande:
 análises a setem calculadas
 
 -- > Valor Médio
+        np.mean()
 -- > Desvio padrão
+        numpy.std()
 -- > Erro padrão
+        desvioPadrao/ np.sqrt(len(dados))
 -- > Incerteza no desvio padrão
 -- > Variância
 -- > Coeficiente de variância
@@ -25,6 +28,7 @@ testes de imagens
 --> imagem sem poros
 --> imagens com muitos poros
 --> imagens inválidas ou corrompidas
+
 """
 
 

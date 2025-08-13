@@ -4,6 +4,16 @@ import os
 import csv
 import pandas as pd
 
+"""
+classificação de tamanho de poros:
+    megapore
+        large, medium, small
+    mesopore
+        very large, large, medium, small very small
+    micropore
+        
+"""
+
 def calculate_media(image, file_name, output_folder_path):
     # Conversão de medidas da imagem
     image_width_mm = 26
@@ -13,8 +23,28 @@ def calculate_media(image, file_name, output_folder_path):
     pixel_area_mm2 = (image_width_mm * image_height_mm) / (image_width_px * image_height_px)
 
     area_minima_mm2 = 0.005
-    LIMIAR_PEQUENO = 0.02
-    LIMIAR_MEDIO = 0.1
+    LIMIAR_PEQUENO = 0.0625
+    LIMIAR_MEDIO = 4
+
+    """
+    mvs = mesopore very small -> 0,0625 - 0,25mm
+    ms = mesopore small -> 0,25 - 0,5mm
+    mm = mesopore medium -> 0,25 - 1mm
+    ml = mesopore large -> 1 - 2mm
+    mvl = mesopore very large -> 2 - 4mm
+    
+    megaS = megapore small -> 4 - 16mm
+    megaM = megapore medium -> 16 - 32mm
+    megaL = megapore large -> 32 - 256mm
+    
+    micropore < 0,0625
+    """
+
+    tamanhos = {
+        'micropore': [],
+        'mesopore': {'mvs': [], 'ms':[],'mm':[],'ml':[], 'mvl':[]},
+        'megapore': {'megaL': [], 'megaM': [], 'megaS': []},
+    }
 
     hsv = cv2.cvtColor(image, cv2.COLOR_BGR2HSV)
     lower_blue = np.array([90, 50, 50])
@@ -47,13 +77,27 @@ def calculate_media(image, file_name, output_folder_path):
 
             if area_mm2 < LIMIAR_PEQUENO:
                 color = (255, 0, 0)
-                area_azul.append(area_mm2)
+                tamanhos['micropore'].append(area_mm2)
             elif area_mm2 < LIMIAR_MEDIO:
                 color = (0, 255, 255)
-                area_amarelo.append(area_mm2)
+                if area_mm2 < 0.25:
+                    tamanhos['mesopore']['mvs'].append(area_mm2)
+                if area_mm2 < 0.5:
+                    tamanhos['mesopore']['ms'].append(area_mm2)
+                if area_mm2 < 1:
+                    tamanhos['mesopore']['mm'].append(area_mm2)
+                if area_mm2 < 2:
+                    tamanhos['mesopore']['ml'].append(area_mm2)
+                else:
+                    tamanhos['mesopore']['mvl'].append(area_mm2)
             else:
                 color = (0, 0, 255)
-                area_vermelho.append(area_mm2)
+                if area_mm2 < 16:
+                    tamanhos['megapore']['megaS'].append(area_mm2)
+                if area_mm2 < 32:
+                    tamanhos['megapore']['megaM'].append(area_mm2)
+                else:
+                    tamanhos['megapore']['megaL'].append(area_mm2)
 
             cv2.circle(output_base, center, radius, color, 15)
             cv2.circle(mask_circles, center, radius, 255, -1)
@@ -72,7 +116,7 @@ def calculate_media(image, file_name, output_folder_path):
     csv_path = output_folder_path + "/" + file_name + "tamanhos_poros.csv"
     with open(csv_path, mode="w", newline="") as file:
         writer = csv.writer(file, delimiter=';')
-        writer.writerow(['Poro', 'Poro pequeno', 'Poro médio', 'Poro grande'])
+        writer.writerow(['Poro', 'Micropore', 'Mesopore', 'Megapore'])
 
         max_len = max(len(area_azul), len(area_amarelo), len(area_vermelho))
 
