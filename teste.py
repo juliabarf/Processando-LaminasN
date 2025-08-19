@@ -26,19 +26,19 @@ try:
         sheet.cell(row=i + 4, column=2, value=valor)
 
     for valor in tamanhos['mesopore']:
-        if valor < 7:
+        if valor < 0.25:
             sheet.cell(row=linha_C, column=3, value=valor)
             linha_C += 1
-        elif valor < 8:
+        elif valor < 0.5:
             sheet.cell(row=linha_D, column=4, value=valor)
             linha_D += 1
-        elif valor < 9:
+        elif valor < 1:
             sheet.cell(row=linha_E, column=5, value=valor)
             linha_E += 1
-        elif valor < 10:
+        elif valor < 2:
             sheet.cell(row=linha_F, column=6, value=valor)
             linha_F += 1
-        elif valor < 11:
+        elif valor < 4:
             sheet.cell(row=linha_G, column=7, value=valor)
             linha_G += 1
 
