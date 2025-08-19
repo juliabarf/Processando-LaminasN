@@ -62,9 +62,7 @@ def calculate_media(image, file_name, output_folder_path):
 
     mask_circles = np.zeros_like(bw_binary)
     circle_areas_mm2 = []
-    area_azul = []
-    area_amarelo = []
-    area_vermelho = []
+
 
     for cnt in contours:
         area_px = cv2.contourArea(cnt)
@@ -98,18 +96,20 @@ def calculate_media(image, file_name, output_folder_path):
     valid_pores = len(circle_areas_mm2)
     mean_real_area = total_real_pore_area_mm2 / valid_pores if valid_pores > 0 else 0
 
+
+
     # --- SALVAR CSV ---
-    csv_path = output_folder_path + "/" + file_name + "tamanhos_poros.csv"
+    csv_path = output_folder_path + "/" + file_name + "_tamanhos_poros.csv"
     with open(csv_path, mode="w", newline="") as file:
         writer = csv.writer(file, delimiter=';')
         writer.writerow(['Poro', 'Micropore', 'Mesopore', 'Megapore'])
 
-        max_len = max(len(area_azul), len(area_amarelo), len(area_vermelho))
+        max_len = max(len(tamanhos['micropore']), len(tamanhos['mesopore']), len(tamanhos['megapore']))
 
         for i in range(max_len):
-            azul = area_azul[i] if i < len(area_azul) else ""
-            amarelo = area_amarelo[i] if i < len(area_amarelo) else ""
-            vermelho = area_vermelho[i] if i < len(area_vermelho) else ""
+            azul = tamanhos['micropore'][i] if i < len(tamanhos['micropore']) else ""
+            amarelo = tamanhos['mesopore'][i] if i < len(tamanhos['mesopore']) else ""
+            vermelho = tamanhos['megapore'][i] if i < len(tamanhos['megapore']) else ""
             writer.writerow([i + 1, azul, amarelo, vermelho])
 
         writer.writerow([])
@@ -194,3 +194,4 @@ def crop_and_calculate_porosity(input_folder_path, output_folder_path, top_borde
 
     df = pd.DataFrame(results)
     return df
+
