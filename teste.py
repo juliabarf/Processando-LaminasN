@@ -19,7 +19,7 @@ try:
 
     # Acessar a primeira planilha
     sheet = workbook['dados']
-    linha_C = linha_D = linha_E= linha_F= linha_G= linha_H= linha_I= linha_J = 4  # começa na linha 4 para Mesopore Very Small
+    linha_C = linha_D = linha_E = linha_F = linha_G = linha_H = linha_I = linha_J = 4  # começa na linha 4 para Mesopore Very Small
 
     #coloca os valores na planilha
     for i, valor in enumerate(tamanhos['micropore']):
@@ -66,3 +66,5 @@ except Exception as e:
 print(tamanhos['micropore'])
 print(tamanhos['mesopore'])
 print(tamanhos['megapore'])
+
+
