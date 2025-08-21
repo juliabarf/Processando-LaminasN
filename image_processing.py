@@ -113,6 +113,9 @@ def calculate_media(image, file_name, output_folder_path):
 
         # coloca os valores na planilha
 
+        #quantidade total de poros encontrados
+        sheet.cell(row=4,column=1,value=valid_pores)
+
         for i, valor in enumerate(tamanhos['micropore']):
             sheet.cell(row=i + 4, column=2, value=valor)
 
