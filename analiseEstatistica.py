@@ -56,6 +56,8 @@ def predominante():
 def valores_pequenos():
     """
     print(valormedio(listaPoros))
+    for i in len(listaValoresPequenos):
+        listaValoresPequenos[i]()
     print(desvioPadrao(listaPoros))
     """
     pass
