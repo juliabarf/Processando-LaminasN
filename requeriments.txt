@@ -1,4 +1,4 @@
 pandas
 numpy
-opencv
+opencv python
 tkinter
