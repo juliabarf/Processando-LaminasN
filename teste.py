@@ -4,6 +4,7 @@ from numpy.ma.extras import column_stack
 from openpyxl import load_workbook
 import random
 import pandas as pd
+from analiseEstatistica import valor_medio
 
 
 def testeMedia():
@@ -71,25 +72,86 @@ def testeMedia():
 
 
 def testeEst():
-
-
     # Carregar a planilha
     workbook = load_workbook("planilhaModelo1.xlsx")
     sheet = workbook['dados'] # ou workbook["NomeDaAba"]
 
     # Pegar todas as linhas a partir da linha 4
-    dados = []
+    micropore = {
+        'micropore': []
+    }
+    mesopore = {
+        'mesoporeVerySmall': [],
+        'mesoporeSmall': [],
+        'mesoporeMedium': [],
+        'mesoporeLarge': [],
+        'mesoporeVeryLarge': []
+    }
+    megapore = {
+        'megaporeSmall': [],
+        'megaporeMedium': [],
+        'megaporeLarge': []
+    }
+
+
+    #dados do micropore
     for row in sheet.iter_rows(min_row=4, min_col=2, max_col=2, values_only=True):
-        dados.append(list(row))
+        micropore['micropore'].append(list(row))
+    micropore = [row[0] for row in micropore['micropore'] if row[0] is not None]
 
-    # Se os dados vieram como [[10], [20], [30]]
-    dados_numeros = [row[0] for row in dados if row[0] is not None]
-
-    soma = sum(dados_numeros)
-    print("Soma:", soma)
-
+    #dados mesopore
+    for row in sheet.iter_rows(min_row=4, min_col=3, max_col=3, values_only=True):
+        mesopore['mesoporeVerySmall'].append(list(row))
+    mesoporeVerySmall = [row[0] for row in mesopore['mesoporeVerySmall'] if row[0] is not None]
 
 
+    for row in sheet.iter_rows(min_row=4, min_col=4, max_col=4, values_only=True):
+        mesopore['mesoporeSmall'].append(list(row))
+    mesoporeSmall = [row[0] for row in mesopore['mesoporeSmall'] if row[0] is not None]
+
+    for row in sheet.iter_rows(min_row=4, min_col=5, max_col=5, values_only=True):
+        mesopore['mesoporeMedium'].append(list(row))
+    mesoporeMedium = [row[0] for row in mesopore['mesoporeMedium'] if row[0] is not None]
+
+    for row in sheet.iter_rows(min_row=4, min_col=6, max_col=6, values_only=True):
+        mesopore['mesoporeLarge'].append(list(row))
+    mesoporeLarge = [row[0] for row in mesopore['mesoporeLarge'] if row[0] is not None]
+
+    for row in sheet.iter_rows(min_row=4, min_col=7, max_col=7, values_only=True):
+        mesopore['mesoporeVeryLarge'].append(list(row))
+    mesoporeVeryLarge = [row[0] for row in mesopore['mesoporeVeryLarge'] if row[0] is not None]
+
+    mesopore_all = [valor[0] for lista in mesopore.values() for valor in lista if valor[0] is not None]
+
+
+    #dados megapore
+    for row in sheet.iter_rows(min_row=4, min_col=8, max_col=8, values_only=True):
+        megapore['megaporeSmall'].append(list(row))
+    megaporeSmall = [row[0] for row in megapore['megaporeSmall'] if row[0] is not None]
+
+    for row in sheet.iter_rows(min_row=4, min_col=9, max_col=9, values_only=True):
+        megapore['megaporeMedium'].append(list(row))
+    megaporeMedium = [row[0] for row in megapore['megaporeMedium'] if row[0] is not None]
+
+    for row in sheet.iter_rows(min_row=4, min_col=10, max_col=10, values_only=True):
+        megapore['megaporeLarge'].append(list(row))
+    megaporeLarge = [row[0] for row in megapore['megaporeLarge'] if row[0] is not None]
+
+    megapore_all = [valor[0] for lista in megapore.values() for valor in lista if valor[0] is not None]
+
+    print(micropore)
+    print(mesoporeVerySmall)
+    print(mesoporeSmall)
+    print(mesoporeMedium)
+    print(mesoporeLarge)
+    print(mesoporeVeryLarge)
+    print(megaporeSmall)
+    print(megaporeMedium)
+    print(megaporeLarge)
+    soma = len(megaporeMedium)
+    print(megapore_all)
+    print(mesopore_all)
+    print(valor_medio(megaporeMedium))
 
 
 

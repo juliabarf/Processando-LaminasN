@@ -30,12 +30,15 @@ testes de imagens
 --> imagens inválidas ou corrompidas
 
 """
+import numpy as np
 
-
-def valor_medio():
-    pass
-def desvio_padrao():
-    pass
+def valor_medio(dados):
+    soma = sum(dados)
+    media = soma / len(dados)
+    return media
+def desvio_padrao(dados):
+    desvio_padrao = np.std(dados)
+    return desvio_padrao
 def erro_padrao():
     pass
 def incerteza():
