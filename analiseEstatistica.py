@@ -3,20 +3,6 @@
 Classificação dos poros
 referência de classificação:
 
-pequeno:
-médio:
-grande:
-
-análises a setem calculadas
-
--- > Valor Médio
-        np.mean()
--- > Desvio padrão
-        numpy.std()
--- > Erro padrão
-        desvioPadrao/ np.sqrt(len(dados))
--- > Incerteza no desvio padrão
--- > Variância
 -- > Coeficiente de variância
 
 testes de imagens
@@ -62,24 +48,3 @@ def predominante(dados):
     texto = f"{indice0} - {indice1}"
 
     return texto
-
-
-
-"""
-    (1/qtd_poros) * (sum(listaPoros)
-"""
-
-
-#tabelas de cada cor
-def valores_pequenos():
-    """
-    print(valormedio(listaPoros))
-    for i in len(listaValoresPequenos):
-        listaValoresPequenos[i]()
-    print(desvioPadrao(listaPoros))
-    """
-    pass
-def valores_medio():
-    pass
-def valores_grande():
-    pass
