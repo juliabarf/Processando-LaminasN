@@ -31,22 +31,24 @@ testes de imagens
 
 """
 import numpy as np
+from scipy import stats
+
 
 def valor_medio(dados):
     soma = sum(dados)
+    if not dados: return 0
     media = soma / len(dados)
     return media
 def desvio_padrao(dados):
-    desvio_padrao = np.std(dados)
-    return desvio_padrao
-def erro_padrao():
-    pass
-def incerteza():
-    pass
-def variancia():
-    pass
-def coeficiente():
-    pass
+    if not dados: return 0
+    return np.std(dados)
+def erro_padrao(dados):
+    if not dados: return 0
+    return stats.sem(dados)
+def incerteza(dados):
+    dp = desvio_padrao(dados)
+    if not dp: return 0
+    return dp / (2 * (len(dados) - 1))
 def predominante():
     pass
 

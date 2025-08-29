@@ -2,3 +2,4 @@ pandas
 numpy
 opencv python
 tkinter
+spcify

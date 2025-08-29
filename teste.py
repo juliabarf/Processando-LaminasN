@@ -4,8 +4,8 @@ from numpy.ma.extras import column_stack
 from openpyxl import load_workbook
 import random
 import pandas as pd
-from analiseEstatistica import valor_medio
-
+from analiseEstatistica import valor_medio, desvio_padrao, erro_padrao, incerteza, predominante
+import win32com.client as win32
 
 def testeMedia():
     tamanhos = {
@@ -71,6 +71,9 @@ def testeMedia():
         print(f"Ocorreu um erro: {e}")
 
 
+
+
+
 def testeEst():
     # Carregar a planilha
     workbook = load_workbook("planilhaModelo1.xlsx")
@@ -99,7 +102,8 @@ def testeEst():
         micropore['micropore'].append(list(row))
     micropore = [row[0] for row in micropore['micropore'] if row[0] is not None]
 
-    #dados mesopore
+
+    #DADOS MESOPORE
     for row in sheet.iter_rows(min_row=4, min_col=3, max_col=3, values_only=True):
         mesopore['mesoporeVerySmall'].append(list(row))
     mesoporeVerySmall = [row[0] for row in mesopore['mesoporeVerySmall'] if row[0] is not None]
@@ -124,7 +128,7 @@ def testeEst():
     mesopore_all = [valor[0] for lista in mesopore.values() for valor in lista if valor[0] is not None]
 
 
-    #dados megapore
+    #DADOS MEGAPORE
     for row in sheet.iter_rows(min_row=4, min_col=8, max_col=8, values_only=True):
         megapore['megaporeSmall'].append(list(row))
     megaporeSmall = [row[0] for row in megapore['megaporeSmall'] if row[0] is not None]
@@ -139,6 +143,9 @@ def testeEst():
 
     megapore_all = [valor[0] for lista in megapore.values() for valor in lista if valor[0] is not None]
 
+
+
+
     print(micropore)
     print(mesoporeVerySmall)
     print(mesoporeSmall)
@@ -152,7 +159,67 @@ def testeEst():
     print(megapore_all)
     print(mesopore_all)
     print(valor_medio(megaporeMedium))
+    valores = micropore, mesoporeVerySmall, mesoporeSmall, mesoporeMedium, mesoporeLarge, mesoporeVeryLarge, mesopore_all, megaporeSmall, megaporeMedium, megaporeLarge, megapore_all
+    testeatualizaExcel(valores)
 
+def testeatualizaExcel(valores):
+    wb = load_workbook("planilhaModelo1.xlsx")
+    aba = wb['analise']  # ou wb["NomeDaAba"]
+
+
+    #atualiza com valor médio
+    for j, valor in enumerate(valores, start=1):
+        if valor:  # se não for lista vazia
+            media = valor_medio(valor)
+        else:
+            media = "N/A"   # pode ser 0, None ou "N/A", depende do que você quer na planilha
+        aba.cell(row=4, column=j+1, value=media)
+
+    for j, valor in enumerate(valores, start=1):
+        if valor:  # se não for lista vazia
+            dp = desvio_padrao(valor)
+        else:
+            dp = "N/A"   # pode ser 0, None ou "N/A", depende do que você quer na planilha
+        aba.cell(row=5, column=j+1, value=dp)
+
+    for j, valor in enumerate(valores, start=1):
+        if valor:  # se não for lista vazia
+            ep = erro_padrao(valor)
+        else:
+            ep = "N/A"   # pode ser 0, None ou "N/A", depende do que você quer na planilha
+        aba.cell(row=6, column=j+1, value=ep)
+
+    for j, valor in enumerate(valores, start=1):
+        if valor:  # se não for lista vazia
+            inc = incerteza(valor)
+        else:
+            inc = "N/A"   # pode ser 0, None ou "N/A", depende do que você quer na planilha
+        aba.cell(row=7, column=j+1, value=inc)
+
+    wb.save("planilhaModelo1.xlsx")  # ou outro nome para não sobrescrever
+
+def teste_histograma():
+
+
+    # Abrir Excel
+    excel = win32.gencache.EnsureDispatch('Excel.Application')
+    excel.Visible = True  # mostra o Excel
+
+    # Abrir planilha existente
+    wb = excel.Workbooks.Open(r'C:\Users\JuliaBarbosa\Downloads\Processando-LaminasN\planilhaModelo1.xlsx')
+    ws = wb.Sheets('dados')
+
+    # Selecionar intervalo de dados
+    dados_range = ws.Range('B4:B11')  # ajuste conforme seus dados
+
+    # Criar histograma
+    chart = ws.Shapes.AddChart2(201, 51, 300, 10, 500, 300)  # 201=histograma, 51=coluna
+    chart.Chart.SetSourceData(dados_range)
+
+    # Salvar e fechar
+    wb.Save()
+    wb.Close()
+    excel.Quit()
 
 
 
