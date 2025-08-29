@@ -49,8 +49,21 @@ def incerteza(dados):
     dp = desvio_padrao(dados)
     if not dp: return 0
     return dp / (2 * (len(dados) - 1))
-def predominante():
-    pass
+def predominante(dados):
+    d0 = dados[0], [dados[1], dados[2], dados[3], dados[4],dados[5], dados[7], dados[8], dados[9]]
+    classificacao0 = ['Micropore','Mesopore Very Small', 'Mesopore Small', 'Mesopore Medium', 'Mesopore Large', 'Mesopore Very Large', 'Megapore Small', 'Megapore Medium', 'Megapore Large']
+
+    d1 = [dados[0], dados[6], dados[10]]
+    classificacao1 = ['Micropore', 'Mesopore', 'Megapore']
+
+    indice0 = classificacao0[max(range(len(d0)), key=lambda i: len(d0[i]))]
+    indice1 = classificacao1[max(range(len(d1)), key=lambda i: len(d1[i]))]
+
+    texto = f"{indice0} - {indice1}"
+
+    return texto
+
+
 
 """
     (1/qtd_poros) * (sum(listaPoros)

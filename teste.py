@@ -145,20 +145,6 @@ def testeEst():
 
 
 
-
-    print(micropore)
-    print(mesoporeVerySmall)
-    print(mesoporeSmall)
-    print(mesoporeMedium)
-    print(mesoporeLarge)
-    print(mesoporeVeryLarge)
-    print(megaporeSmall)
-    print(megaporeMedium)
-    print(megaporeLarge)
-    soma = len(megaporeMedium)
-    print(megapore_all)
-    print(mesopore_all)
-    print(valor_medio(megaporeMedium))
     valores = micropore, mesoporeVerySmall, mesoporeSmall, mesoporeMedium, mesoporeLarge, mesoporeVeryLarge, mesopore_all, megaporeSmall, megaporeMedium, megaporeLarge, megapore_all
     testeatualizaExcel(valores)
 
@@ -196,24 +182,29 @@ def testeatualizaExcel(valores):
             inc = "N/A"   # pode ser 0, None ou "N/A", depende do que você quer na planilha
         aba.cell(row=7, column=j+1, value=inc)
 
+
+
+    pre = predominante(valores)
+     # pode ser 0, None ou "N/A", depende do que você quer na planilha
+    aba.cell(row=8, column=2, value=pre)
+
     wb.save("planilhaModelo1.xlsx")  # ou outro nome para não sobrescrever
 
 def teste_histograma():
-
-
     # Abrir Excel
     excel = win32.gencache.EnsureDispatch('Excel.Application')
     excel.Visible = True  # mostra o Excel
 
     # Abrir planilha existente
     wb = excel.Workbooks.Open(r'C:\Users\JuliaBarbosa\Downloads\Processando-LaminasN\planilhaModelo1.xlsx')
+    wn = wb.Sheets('analise')
     ws = wb.Sheets('dados')
-
     # Selecionar intervalo de dados
     dados_range = ws.Range('B4:B11')  # ajuste conforme seus dados
 
     # Criar histograma
-    chart = ws.Shapes.AddChart2(201, 51, 300, 10, 500, 300)  # 201=histograma, 51=coluna
+    #AddChart2(Style, Type, Left, Top, Width, Height)
+    chart = wn.Shapes.AddChart2(201, 51, 300, 140, 500, 300)  # 201=histograma, 51=coluna
     chart.Chart.SetSourceData(dados_range)
 
     # Salvar e fechar
@@ -221,6 +212,8 @@ def teste_histograma():
     wb.Close()
     excel.Quit()
 
+def teste(valores):
+    print(predominante(valores))
 
 
 

@@ -3,3 +3,4 @@ numpy
 opencv python
 tkinter
 spcify
+win32com.client
