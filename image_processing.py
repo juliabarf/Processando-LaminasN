@@ -3,6 +3,7 @@ import numpy as np
 import os
 import csv
 import pandas as pd
+from teste import testeMedia
 from openpyxl import load_workbook
 
 
@@ -98,75 +99,6 @@ def calculate_media(image, file_name, output_folder_path):
     valid_pores = len(circle_areas_mm2)
     mean_real_area = total_real_pore_area_mm2 / valid_pores if valid_pores > 0 else 0
 
-    #quantidade de poros encontrados = valid_pores
-    #area medial real em pixels = mean_real_area
-    #area minima = area_minima_mm2
-
-    # --- SALVAR DADOS EM EXCEL ---
-    try:
-        workbook = load_workbook(filename="planilhaModelo.xlsx")
-        print("Arquivo aberto com sucesso!")
-
-        # Acessar a primeira planilha
-        sheet = workbook['dados']
-        linha_C = linha_D = linha_E = linha_F = linha_G = linha_H = linha_I = linha_J = 4  # começa na linha 4 para Mesopore Very Small
-
-        # coloca os valores na planilha
-
-        #quantidade total de poros encontrados
-        sheet.cell(row=4,column=1,value=valid_pores)
-
-        for i, valor in enumerate(tamanhos['micropore']):
-            sheet.cell(row=i + 4, column=2, value=valor)
-
-        for valor in tamanhos['mesopore']:
-            if valor < 0.25:
-                sheet.cell(row=linha_C, column=3, value=valor)
-                linha_C += 1
-            elif valor < 0.5:
-                sheet.cell(row=linha_D, column=4, value=valor)
-                linha_D += 1
-            elif valor < 1:
-                sheet.cell(row=linha_E, column=5, value=valor)
-                linha_E += 1
-            elif valor < 2:
-                sheet.cell(row=linha_F, column=6, value=valor)
-                linha_F += 1
-            elif valor < 4:
-                sheet.cell(row=linha_G, column=7, value=valor)
-                linha_G += 1
-
-        for valor in tamanhos['megapore']:
-            if valor < 16:
-                sheet.cell(row=linha_H, column=8, value=valor)
-                linha_H += 1
-            elif valor < 32:
-                sheet.cell(row=linha_I, column=9, value=valor)
-                linha_I += 1
-            elif valor < 256:
-                sheet.cell(row=linha_J, column=10, value=valor)
-                linha_J += 1
-
-        # salva planilha nova
-        import os
-        # Substitua pelo caminho real
-        pastaExcel = "tabelasExcel"
-        caminho_completo = os.path.join(output_folder_path, pastaExcel)
-
-        try:
-            os.makedirs(caminho_completo)
-            print(f"Pasta '{pastaExcel}' criada com sucesso em '{output_folder_path}'")
-        except FileExistsError:
-            print(f"A pasta '{pastaExcel}' já existe em '{output_folder_path}'")
-        except Exception as e:
-            print(f"Ocorreu um erro ao criar a pasta: {e}")
-
-        workbook.save(output_folder_path+'/'+pastaExcel+'/'+file_name+"planilhaModelo1.xlsx")
-
-    except FileNotFoundError:
-        print("Erro: Arquivo não encontrado.")
-    except Exception as e:
-        print(f"Ocorreu um erro: {e}")
 
     # --- SALVAR IMAGEM ---
     output_image_path = "poros_classificados.jpg"
@@ -175,6 +107,7 @@ def calculate_media(image, file_name, output_folder_path):
     print(f"CSV salvo como: ")
     print(f"Imagem com poros classificados salva como: {output_image_path}")
 
+    testeMedia(tamanhos,file_name, output_folder_path)
     return mean_real_area, output_base
 
 

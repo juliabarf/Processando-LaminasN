@@ -29,7 +29,12 @@ def desvio_padrao(dados):
     if not dados: return 0
     return np.std(dados)
 def erro_padrao(dados):
-    if not dados: return 0
+    dados = np.array(dados)
+    dados = dados[~np.isnan(dados)]  # remove NaN, se houver
+
+    if len(dados) < 2:
+        return 0  # não dá pra calcular SEM
+
     return stats.sem(dados)
 def incerteza(dados):
     dp = desvio_padrao(dados)

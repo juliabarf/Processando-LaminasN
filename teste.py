@@ -7,17 +7,7 @@ import pandas as pd
 from analiseEstatistica import valor_medio, desvio_padrao, erro_padrao, incerteza, predominante
 import win32com.client as win32
 
-def testeMedia():
-    tamanhos = {
-        'micropore': [],
-        'mesopore': [],
-        'megapore': [],
-    }
-
-    tamanhos['micropore'] = [round(random.uniform(0, 4), 2) for _ in range(8)]
-    tamanhos['mesopore'] = [round(random.uniform(4, 11), 2) for _ in range(8)]
-    tamanhos['megapore'] = [round(random.uniform(11, 14), 2) for _ in range(8)]
-
+def testeMedia(tamanhos,nome,caminho):
 
     # Substitua 'nome_do_arquivo.xlsx' pelo caminho do seu arquivo
     try:
@@ -30,10 +20,11 @@ def testeMedia():
 
         #coloca os valores na planilha
         for i, valor in enumerate(tamanhos['micropore']):
-            sheet.cell(row=i + 4, column=2, value=valor)
+            if valor < 0.0625:
+                sheet.cell(row=i + 4, column=2, value=valor)
 
         for valor in tamanhos['mesopore']:
-            if valor < 0.25:
+            if valor < 0.0625:
                 sheet.cell(row=linha_C, column=3, value=valor)
                 linha_C += 1
             elif valor < 0.5:
@@ -62,8 +53,23 @@ def testeMedia():
 
 
         # salva planilha nova
-        workbook.save("planilhaModelo1.xlsx")
+        import os
+        # Substitua pelo caminho real
+        pastaExcel = "tabelasExcel"
+        caminho_completo = os.path.join(caminho, pastaExcel)
 
+        try:
+            os.makedirs(caminho_completo)
+            print(f"Pasta '{pastaExcel}' criada com sucesso em '{caminho}'")
+        except FileExistsError:
+            print(f"A pasta '{pastaExcel}' já existe em '{caminho}'")
+        except Exception as e:
+            print(f"Ocorreu um erro ao criar a pasta: {e}")
+
+        caminho_dados = caminho + '/' + pastaExcel + '/' + nome + ".xlsx"
+        workbook.save(caminho_dados)
+        if caminho_dados:
+            testeEst(caminho_dados)
 
     except FileNotFoundError:
         print("Erro: Arquivo não encontrado.")
@@ -71,12 +77,10 @@ def testeMedia():
         print(f"Ocorreu um erro: {e}")
 
 
-
-
-
-def testeEst():
+def testeEst(caminho):
     # Carregar a planilha
-    workbook = load_workbook("planilhaModelo1.xlsx")
+    print('entrou', caminho)
+    workbook = load_workbook(caminho)
     sheet = workbook['dados'] # ou workbook["NomeDaAba"]
 
     # Pegar todas as linhas a partir da linha 4
@@ -143,13 +147,14 @@ def testeEst():
 
     megapore_all = [valor[0] for lista in megapore.values() for valor in lista if valor[0] is not None]
 
+    pores = micropore + megapore_all + megapore_all
 
+    valores = micropore, mesoporeVerySmall, mesoporeSmall, mesoporeMedium, mesoporeLarge, mesoporeVeryLarge, mesopore_all, megaporeSmall, megaporeMedium, megaporeLarge, megapore_all, pores
+    testeatualizaExcel(valores, caminho)
 
-    valores = micropore, mesoporeVerySmall, mesoporeSmall, mesoporeMedium, mesoporeLarge, mesoporeVeryLarge, mesopore_all, megaporeSmall, megaporeMedium, megaporeLarge, megapore_all
-    testeatualizaExcel(valores)
-
-def testeatualizaExcel(valores):
-    wb = load_workbook("planilhaModelo1.xlsx")
+def testeatualizaExcel(valores, caminho):
+    print('entrou2')
+    wb = load_workbook(caminho)
     aba = wb['analise']  # ou wb["NomeDaAba"]
 
 
@@ -182,13 +187,11 @@ def testeatualizaExcel(valores):
             inc = "N/A"   # pode ser 0, None ou "N/A", depende do que você quer na planilha
         aba.cell(row=7, column=j+1, value=inc)
 
-
-
     pre = predominante(valores)
      # pode ser 0, None ou "N/A", depende do que você quer na planilha
     aba.cell(row=8, column=2, value=pre)
 
-    wb.save("planilhaModelo1.xlsx")  # ou outro nome para não sobrescrever
+    wb.save(caminho)  # ou outro nome para não sobrescrever
 
 def teste_histograma():
     # Abrir Excel
