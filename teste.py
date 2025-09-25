@@ -19,6 +19,7 @@ def testeMedia(tamanhos,nome,caminho):
         linha_C = linha_D = linha_E = linha_F = linha_G = linha_H = linha_I = linha_J = 4  # começa na linha 4 para Mesopore Very Small
 
         #coloca os valores na planilha
+
         for i, valor in enumerate(tamanhos['micropore']):
             if valor < 0.0625:
                 sheet.cell(row=i + 4, column=2, value=valor)
@@ -194,15 +195,13 @@ def testeatualizaExcel(valores, caminho):
     wb.save(caminho)  # ou outro nome para não sobrescrever
 
 def teste_histograma():
-    # Abrir Excel
     excel = win32.gencache.EnsureDispatch('Excel.Application')
     excel.Visible = True  # mostra o Excel
 
-    # Abrir planilha existente
     wb = excel.Workbooks.Open(r'C:\Users\JuliaBarbosa\Downloads\Processando-LaminasN\planilhaModelo1.xlsx')
     wn = wb.Sheets('analise')
     ws = wb.Sheets('dados')
-    # Selecionar intervalo de dados
+
     dados_range = ws.Range('B4:B11')  # ajuste conforme seus dados
 
     # Criar histograma

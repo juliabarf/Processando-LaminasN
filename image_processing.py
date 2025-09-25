@@ -30,15 +30,15 @@ def calculate_media(image, file_name, output_folder_path):
     LIMIAR_MEDIO = 4
 
     """
-    mvs = mesopore very small -> 0,0625 - 0,25mm
-    ms = mesopore small -> 0,25 - 0,5mm
-    mm = mesopore medium -> 0,25 - 1mm
-    ml = mesopore large -> 1 - 2mm
-    mvl = mesopore very large -> 2 - 4mm
+    mesopore very small -> 0,0625 - 0,25mm
+    mesopore small -> 0,25 - 0,5mm
+    mesopore medium -> 0,25 - 1mm
+    mesopore large -> 1 - 2mm
+    mesopore very large -> 2 - 4mm
     
-    megaS = megapore small -> 4 - 16mm
-    megaM = megapore medium -> 16 - 32mm
-    megaL = megapore large -> 32 - 256mm
+    megapore small -> 4 - 16mm
+    megapore medium -> 16 - 32mm
+    megapore large -> 32 - 256mm
     
     micropore < 0,0625
     """
@@ -106,8 +106,8 @@ def calculate_media(image, file_name, output_folder_path):
     print(file_name)
     print(f"CSV salvo como: ")
     print(f"Imagem com poros classificados salva como: {output_image_path}")
-
     testeMedia(tamanhos,file_name, output_folder_path)
+
     return mean_real_area, output_base
 
 
