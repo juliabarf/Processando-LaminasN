@@ -99,6 +99,11 @@ def calculate_media(image, file_name, output_folder_path):
     valid_pores = len(circle_areas_mm2)
     mean_real_area = total_real_pore_area_mm2 / valid_pores if valid_pores > 0 else 0
 
+    total_image_area_mm2 = image_width_mm * image_height_mm
+    porosidade = {}
+    for key in tamanhos:
+        poros_area = sum(tamanhos[key])
+        porosidade[key] = poros_area / total_image_area_mm2
 
     # --- SALVAR IMAGEM ---
     output_image_path = "poros_classificados.jpg"
@@ -106,6 +111,8 @@ def calculate_media(image, file_name, output_folder_path):
     print(file_name)
     print(f"CSV salvo como: ")
     print(f"Imagem com poros classificados salva como: {output_image_path}")
+    print("Porosidade por tipo:", porosidade)
+
     testeMedia(tamanhos,file_name, output_folder_path)
 
     return mean_real_area, output_base
