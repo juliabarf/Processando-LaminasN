@@ -32,3 +32,5 @@ def open_excel_file(output_folder_entry):
     except Exception as e:
         messagebox.showerror("Erro", f"Erro ao tentar abrir o arquivo: {e}")
 
+def save_image():
+    pass

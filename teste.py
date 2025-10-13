@@ -7,7 +7,8 @@ import pandas as pd
 from analiseEstatistica import valor_medio, desvio_padrao, erro_padrao, incerteza, predominante
 import win32com.client as win32
 
-def testeMedia(tamanhos,nome,caminho):
+def testeMedia(tamanhos,nome,caminho,porosidade):
+    print("no teste Media", porosidade)
 
     # Substitua 'nome_do_arquivo.xlsx' pelo caminho do seu arquivo
     try:
@@ -70,7 +71,7 @@ def testeMedia(tamanhos,nome,caminho):
         caminho_dados = caminho + '/' + pastaExcel + '/' + nome + ".xlsx"
         workbook.save(caminho_dados)
         if caminho_dados:
-            testeEst(caminho_dados)
+            testeEst(caminho_dados,porosidade)
 
     except FileNotFoundError:
         print("Erro: Arquivo não encontrado.")
@@ -78,9 +79,8 @@ def testeMedia(tamanhos,nome,caminho):
         print(f"Ocorreu um erro: {e}")
 
 
-def testeEst(caminho):
+def testeEst(caminho,porosidade):
     # Carregar a planilha
-    print('entrou', caminho)
     workbook = load_workbook(caminho)
     sheet = workbook['dados'] # ou workbook["NomeDaAba"]
 
@@ -151,10 +151,9 @@ def testeEst(caminho):
     pores = micropore + megapore_all + megapore_all
 
     valores = micropore, mesoporeVerySmall, mesoporeSmall, mesoporeMedium, mesoporeLarge, mesoporeVeryLarge, mesopore_all, megaporeSmall, megaporeMedium, megaporeLarge, megapore_all, pores
-    testeatualizaExcel(valores, caminho)
+    testeatualizaExcel(valores, caminho,porosidade)
 
-def testeatualizaExcel(valores, caminho):
-    print('entrou2')
+def testeatualizaExcel(valores, caminho,porosidade):
     wb = load_workbook(caminho)
     aba = wb['analise']  # ou wb["NomeDaAba"]
 
@@ -188,31 +187,12 @@ def testeatualizaExcel(valores, caminho):
             inc = "N/A"   # pode ser 0, None ou "N/A", depende do que você quer na planilha
         aba.cell(row=7, column=j+1, value=inc)
 
-    pre = predominante(valores)
+    pre = predominante(porosidade)
      # pode ser 0, None ou "N/A", depende do que você quer na planilha
     aba.cell(row=8, column=2, value=pre)
 
     wb.save(caminho)  # ou outro nome para não sobrescrever
 
-def teste_histograma():
-    excel = win32.gencache.EnsureDispatch('Excel.Application')
-    excel.Visible = True  # mostra o Excel
-
-    wb = excel.Workbooks.Open(r'C:\Users\JuliaBarbosa\Downloads\Processando-LaminasN\planilhaModelo1.xlsx')
-    wn = wb.Sheets('analise')
-    ws = wb.Sheets('dados')
-
-    dados_range = ws.Range('B4:B11')  # ajuste conforme seus dados
-
-    # Criar histograma
-    #AddChart2(Style, Type, Left, Top, Width, Height)
-    chart = wn.Shapes.AddChart2(201, 51, 300, 140, 500, 300)  # 201=histograma, 51=coluna
-    chart.Chart.SetSourceData(dados_range)
-
-    # Salvar e fechar
-    wb.Save()
-    wb.Close()
-    excel.Quit()
 
 def teste(valores):
     print(predominante(valores))

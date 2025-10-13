@@ -103,7 +103,7 @@ def calculate_media(image, file_name, output_folder_path):
     porosidade = {}
     for key in tamanhos:
         poros_area = sum(tamanhos[key])
-        porosidade[key] = poros_area / total_image_area_mm2
+        porosidade[key] = (poros_area / total_image_area_mm2) * 100
 
     # --- SALVAR IMAGEM ---
     output_image_path = "poros_classificados.jpg"
@@ -112,8 +112,9 @@ def calculate_media(image, file_name, output_folder_path):
     print(f"CSV salvo como: ")
     print(f"Imagem com poros classificados salva como: {output_image_path}")
     print("Porosidade por tipo:", porosidade)
+    print(f"porosidade micropore - {porosidade['micropore']}")
 
-    testeMedia(tamanhos,file_name, output_folder_path)
+    testeMedia(tamanhos,file_name, output_folder_path, porosidade)
 
     return mean_real_area, output_base
 
@@ -126,7 +127,9 @@ def calculate_porosity(image):
     total_area = BW_otsu.size
     white_area = np.sum(inverted_BW == 255)
     porosity = (white_area / total_area) * 100
+    print(porosity)
     return porosity, inverted_BW
+
 
 
 def crop_and_calculate_porosity(input_folder_path, output_folder_path, top_border, bottom_border, left_border, right_border, progress_bar):
